@@ -132,7 +132,16 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
     });
 });
 
+controller.hears(['who made me'],'direct_message,direct_mention,mention',function(bot, message) {
 
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,user.name + ' made me');
+        } else {
+            bot.reply(message,'I don\'t know yet!');
+        }
+    });
+});
 controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(bot, message) {
 
     bot.startConversation(message,function(err, convo) {
@@ -167,6 +176,58 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
 
     bot.reply(message,':robot_face: I am a bot named <@' + bot.identity.name + '>. I have been running for ' + uptime + ' on ' + hostname + '.');
 
+});
+controller.hears(['prime'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+        bot.reply(message,'2,  3,  5,  7,  11,  13,  17,  19,  23,  29');
+
+    });
+});
+
+controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+	
+	var numbers = message.text.match(/prime (.*)/i);
+	var number = numbers[1];
+	
+	var test = number / number;
+	var sectest = number / 2;
+	
+
+    controller.storage.users.get(message.user,function(err, user) {
+        
+		if(test == 1 && sectest % 1 != 0)
+		{
+
+        bot.reply(message,number +' is prime number');
+		
+		} else
+		{
+			bot.reply(message,number +' is not prime number');
+			
+			var count = 0;
+			var primenumbers = [];
+			var jako
+			var jako2
+			
+			while(count < 10)
+			{
+				number++;
+				
+				jako = number / number;
+				jako2 = number / 2;
+				
+				if(jako == 1 && jako2 % 1 != 0)
+				{
+					primenumbers.push(number);
+					count++;
+					
+				}
+			
+			}
+			bot.reply(message,'next 10 prime numbers are: ' + primenumbers);			
+		}
+    });
 });
 
 function formatUptime(uptime) {
