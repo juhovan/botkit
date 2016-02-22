@@ -132,7 +132,16 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
     });
 });
 
+controller.hears(['who made me'],'direct_message,direct_mention,mention',function(bot, message) {
 
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,user.name + ' made me');
+        } else {
+            bot.reply(message,'I don\'t know yet!');
+        }
+    });
+});
 controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(bot, message) {
 
     bot.startConversation(message,function(err, convo) {
@@ -168,7 +177,139 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
     bot.reply(message,':robot_face: I am a bot named <@' + bot.identity.name + '>. I have been running for ' + uptime + ' on ' + hostname + '.');
 
 });
+controller.hears(['prime'],'direct_message,direct_mention,mention',function(bot, message) {
 
+    controller.storage.users.get(message.user,function(err, user) {
+        bot.reply(message,'2,  3,  5,  7,  11,  13,  17,  19,  23,  29');
+
+    });
+});
+
+
+controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+	
+	var numbers = message.text.match(/prime (.*)/i);
+	var number = numbers[1];
+	
+	var test = number / number;
+	var sectest = number / 2;
+	
+
+    controller.storage.users.get(message.user,function(err, user) {
+        
+		if(test == 1 && sectest % 1 != 0) {
+			bot.reply(message,number +' is prime number');
+		} else if (number == 2) {
+			bot.reply(message,number +' is prime number');
+		} else {
+			bot.reply(message,number +' is not prime number');
+			
+			var count = 0;
+			var primenumbers = [];
+			var jako
+			var jako2
+			
+			while(count < 10)
+			{
+				number++;
+				
+				jako = number / number;
+				jako2 = number / 2;
+				
+				if(jako == 1 && jako2 % 1 != 0)
+				{
+					primenumbers.push(number);
+					count++;
+					
+				}
+			
+			}
+			bot.reply(message,'next 10 prime numbers are: ' + primenumbers);			
+		}
+    });
+});
+controller.hears(['fibonacci'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+        bot.reply(message,'1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+
+    });
+});
+controller.hears(['fibonacci (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+controller.storage.users.get(message.user,function(err, user) {
+   
+    var matches = message.text.match(/fibonacci (.*)/i);
+    var number = matches[1];
+   
+    bot.reply(message,number );
+   
+        function listoffibo(n) {
+            var a = 0, b = 1, f = 1;
+            for(var i = 2; i <= n; i++) {
+                f = a + b;
+                a = b;
+                b = f;
+            }
+            return f;
+        };
+   
+        function isFib(val){
+            var prev = 0;
+            var curr = 1;
+            while(prev<=val){
+                if(prev == val){
+                    
+                    bot.reply(message,' yes ' + val );
+                    var isnum = true;
+					
+			var count = 0;
+			var fibolist = [];
+			
+			while(count < 10) {
+			
+			val++
+			
+			var prev = 0;
+            var curr = 1;
+			
+				while(prev<=val){
+					if(prev == val){
+									 
+						count++;
+						fibolist.push(val);
+						var isnum = true;
+						
+					} else {
+						var isnum = false;
+					}
+					curr = prev + curr;
+					prev = curr - prev;
+				}
+					
+			}
+			bot.reply(message,'next numbers: ' +  fibolist );
+					
+					
+                    return;
+                } else {
+                    var isnum = false;
+                }
+                curr = prev + curr;
+                prev = curr - prev;
+            }
+            
+			
+
+			bot.reply(message,'not fibonacci. ');
+			
+        };
+        isFib(number);
+       
+
+    });
+ 
+});
 function formatUptime(uptime) {
     var unit = 'second';
     if (uptime > 60) {
