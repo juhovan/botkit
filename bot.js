@@ -185,7 +185,6 @@ controller.hears(['prime'],'direct_message,direct_mention,mention',function(bot,
     });
 });
 
-
 controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
 	
 	var numbers = message.text.match(/prime (.*)/i);
@@ -193,7 +192,7 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 	
 	var test = number / number;
 	var sectest = number / 2;
-	
+
 
     controller.storage.users.get(message.user,function(err, user) {
         
@@ -310,6 +309,8 @@ controller.storage.users.get(message.user,function(err, user) {
     });
  
 });
+
+
 function formatUptime(uptime) {
     var unit = 'second';
     if (uptime > 60) {
