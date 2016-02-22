@@ -139,6 +139,28 @@ controller.hears(['prime','first ten prime numbers'],'direct_message,direct_ment
     });
 });
 
+controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+    var matches = message.text.match(/prime (.*)/i);
+    var nume = matches[1];
+    controller.storage.users.get(message.user,function(err, user) {
+        controller.storage.users.save(user,function(err, id) {
+          if(isPrime(nume)){
+            bot.reply(message,nume + 'is prime number');
+          }else{
+            bot.reply(message,nume + 'is not prime number');
+          }
+        });
+    });
+});
+
+function isPrime(number) {
+    var start = 2;
+    while (start <= Math.sqrt(number)) {
+        if (number % start++ < 1) return false;
+    }
+    return number > 1;
+}
+
 controller.hears(['who make you','who made you'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
