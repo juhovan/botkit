@@ -135,11 +135,7 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
 controller.hears(['who make you','who made you'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
-        if (user && user.name) {
-            bot.reply(message,'Metro group made me');
-        } else {
-            bot.reply(message,'who know');
-        }
+        bot.reply(message,'Metro group made me');
     });
 });
 
