@@ -135,21 +135,20 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
 controller.hears(['prime','first ten prime numbers'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
-        bot.reply(message,'1 ,2 ,3, 5, 7, 11, 13, 17, 19, 23');
+        bot.reply(message,'1 ,2 ,3, 5, 7, 11, 13, 17, 19, 23, 29');
     });
 });
 
 controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
     var matches = message.text.match(/prime (.*)/i);
     var nume = matches[1];
+    bot.reply(message,nume + 'is prime number');
     controller.storage.users.get(message.user,function(err, user) {
-        controller.storage.users.save(user,function(err, id) {
           if(isPrime(nume)){
             bot.reply(message,nume + 'is prime number');
           }else{
             bot.reply(message,nume + 'is not prime number');
-          }
-        });
+          });
     });
 });
 
