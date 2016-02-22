@@ -196,13 +196,11 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 
     controller.storage.users.get(message.user,function(err, user) {
         
-		if(test == 1 && sectest % 1 != 0)
-		{
-
-        bot.reply(message,number +' is prime number');
-		
-		} else
-		{
+		if(test == 1 && sectest % 1 != 0) {
+			bot.reply(message,number +' is prime number');
+		} else if (number == 2) {
+			bot.reply(message,number +' is prime number');
+		} else {
 			bot.reply(message,number +' is not prime number');
 			
 			var count = 0;
