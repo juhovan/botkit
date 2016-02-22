@@ -26,7 +26,7 @@ This bot demonstrates many of the core features of Botkit:
   Run your bot from the command line:
 
     set token=<MY TOKEN>
-	
+
 	node bot.js
 
 # USE THE BOT:
@@ -128,6 +128,17 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
             bot.reply(message,'Your name is ' + user.name);
         } else {
             bot.reply(message,'I don\'t know yet!');
+        }
+    });
+});
+
+controller.hears(['who make you','who made you'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,'Metro group made me');
+        } else {
+            bot.reply(message,'who know');
         }
     });
 });
