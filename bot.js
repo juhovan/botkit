@@ -227,7 +227,88 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 		}
     });
 });
+controller.hears(['fibonacci'],'direct_message,direct_mention,mention',function(bot, message) {
 
+    controller.storage.users.get(message.user,function(err, user) {
+        bot.reply(message,'1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+
+    });
+});
+controller.hears(['fibonacci (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+controller.storage.users.get(message.user,function(err, user) {
+   
+    var matches = message.text.match(/fibonacci (.*)/i);
+    var number = matches[1];
+   
+    bot.reply(message,number );
+   
+        function listoffibo(n) {
+            var a = 0, b = 1, f = 1;
+            for(var i = 2; i <= n; i++) {
+                f = a + b;
+                a = b;
+                b = f;
+            }
+            return f;
+        };
+   
+        function isFib(val){
+            var prev = 0;
+            var curr = 1;
+            while(prev<=val){
+                if(prev == val){
+                    
+                    bot.reply(message,' yes ' + val );
+                    var isnum = true;
+					
+			var count = 0;
+			var fibolist = [];
+			
+			while(count < 10) {
+			
+			val++
+			
+			var prev = 0;
+            var curr = 1;
+			
+				while(prev<=val){
+					if(prev == val){
+									 
+						count++;
+						fibolist.push(val);
+						var isnum = true;
+						
+					} else {
+						var isnum = false;
+					}
+					curr = prev + curr;
+					prev = curr - prev;
+				}
+					
+			}
+			bot.reply(message,'next numbers: ' +  fibolist );
+					
+					
+                    return;
+                } else {
+                    var isnum = false;
+                }
+                curr = prev + curr;
+                prev = curr - prev;
+            }
+            
+			
+
+			bot.reply(message,'not fibonacci. ');
+			
+        };
+        isFib(number);
+       
+
+    });
+ 
+});
 function formatUptime(uptime) {
     var unit = 'second';
     if (uptime > 60) {
