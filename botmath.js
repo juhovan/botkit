@@ -15,3 +15,15 @@ var isPrime = function (n) {
 }
 
 module.exports.isPrime = isPrime;
+
+function calculateFibonacciUpto(goal) {
+    var fibonacci = [1, 1];
+
+    while (fibonacci[fibonacci.length-1] < goal) {
+        fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
+    }
+
+    return fibonacci;
+}
+
+module.exports.calculateFibonacciUpto = calculateFibonacciUpto;
