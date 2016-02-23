@@ -275,3 +275,4 @@ controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'm
 	}
 });
 
+exports.isPrime = isPrime;
