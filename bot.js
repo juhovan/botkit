@@ -210,23 +210,28 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 			
 			while(count < 10)
 			{
-				number++;
+				number--;
 				
 				jako = number / number;
 				jako2 = number / 2;
 				
-				if(jako == 1 && jako2 % 1 != 0)
+				if(jako == 1 && jako2 % 1 !== 0 || number == 2 || number == -2 || number == 0)
 				{
+		
 					primenumbers.push(number);
 					count++;
 					
 				}
 			
 			}
-			bot.reply(message,'next 10 prime numbers are: ' + primenumbers);			
+			bot.reply(message,'last 10 prime numbers are: ' + primenumbers);			
 		}
     });
 });
+
+
+
+
 controller.hears(['fibonacci'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
