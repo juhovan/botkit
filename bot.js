@@ -87,7 +87,12 @@ var bot = controller.spawn({
 
 controller.hears(['weather (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
     var location = message.text.match(/weather (.*)/i);
-    var location = location[1];
+    if (location[1]=='in'){
+        var location = location[2];
+    }
+    else{
+        var location = location[1];
+    }
     weather.find({search: location+', FI', degreeType: 'C'}, function(err, result) {
         var array = result
         var temp = array[0].current.temperature
