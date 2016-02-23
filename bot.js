@@ -227,21 +227,27 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 		}
     });
 });
-controller.hears(['fibonacci'],'direct_message,direct_mention,mention',function(bot, message) {
+ /* controller.hears(['fibonacci'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
         bot.reply(message,'1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
 
     });
+}); */
+
+
+controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
+    if (message.text === 'fibonacci') {
+        bot.reply(message, '1, 1, 2, 3, 5');
+    }
 });
+
 controller.hears(['fibonacci (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
 
 controller.storage.users.get(message.user,function(err, user) {
    
     var matches = message.text.match(/fibonacci (.*)/i);
     var number = matches[1];
-   
-    bot.reply(message,number );
    
         function listoffibo(n) {
             var a = 0, b = 1, f = 1;
@@ -259,36 +265,34 @@ controller.storage.users.get(message.user,function(err, user) {
             while(prev<=val){
                 if(prev == val){
                     
-                    bot.reply(message,' yes ' + val );
                     var isnum = true;
 					
-			var count = 0;
-			var fibolist = [];
+					var count = 0;
+					var fibolist = [];
+					
+					while(count < 5) {
+					
+					val++
+					
+					var prev = 0;
+					var curr = 1;
 			
-			while(count < 10) {
-			
-			val++
-			
-			var prev = 0;
-            var curr = 1;
-			
-				while(prev<=val){
-					if(prev == val){
-									 
-						count++;
-						fibolist.push(val);
-						var isnum = true;
-						
-					} else {
-						var isnum = false;
+					while(prev<=val){
+						if(prev == val){
+										 
+							count++;
+							fibolist.push(val);
+							var isnum = true;
+							
+						} else {
+							var isnum = false;
+						}
+						curr = prev + curr;
+						prev = curr - prev;
 					}
-					curr = prev + curr;
-					prev = curr - prev;
-				}
 					
-			}
-			bot.reply(message,'next numbers: ' +  fibolist );
-					
+					}
+					bot.reply(message,'next numbers: ' +  fibolist );
 					
                     return;
                 } else {
@@ -298,47 +302,15 @@ controller.storage.users.get(message.user,function(err, user) {
                 prev = curr - prev;
             }
             
-			
-
 			bot.reply(message,'not fibonacci. ');
 			
         };
         isFib(number);
        
-
     });
  
-});
+}); 
 
-
-controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
-    if (message.text === 'fibonacci') {
-        bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
-    }
-});
-
-controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
-    var parameter = parseInt(message.match[1]);
-    
-    var fibonacci = calculateFibonacciUpto(parameter);
-    
-    if (fibonacci[fibonacci.length-1] !== parameter) {
-        bot.reply(message, 'That is not a Fibonacci number!');
-    }
-    else {
-        bot.reply(message, fibonacci.slice(fibonacci.length-10,fibonacci.length).join(', '));
-    }
-});
-
-function calculateFibonacciUpto(goal) {
-    var fibonacci = [1, 1];
-    
-    while (fibonacci[fibonacci.length-1] < goal) {
-        fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
-    }
-    
-    return fibonacci;
-}
 
 function formatUptime(uptime) {
     var unit = 'second';
