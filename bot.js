@@ -75,6 +75,8 @@ var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
 var botmath = require('./botmath.js');
+var fibo = require('./fibonacci.js');
+
 
 var controller = Botkit.slackbot({
     debug: true,
@@ -228,90 +230,26 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 		}
     });
 });
- /* controller.hears(['fibonacci'],'direct_message,direct_mention,mention',function(bot, message) {
-
-    controller.storage.users.get(message.user,function(err, user) {
-        bot.reply(message,'1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
-
-    });
-}); */
-
 
 controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
     if (message.text === 'fibonacci') {
-        bot.reply(message, '1, 1, 2, 3, 5');
+        bot.reply(message, 'First five fibonacci numbers: 1, 1, 2, 3, 5');
     }
 });
 
-controller.hears(['fibonacci (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
+    var parameter = parseInt(message.match[1]);
 
-controller.storage.users.get(message.user,function(err, user) {
-   
-    var matches = message.text.match(/fibonacci (.*)/i);
-    var number = matches[1];
-   
-        function listoffibo(n) {
-            var a = 0, b = 1, f = 1;
-            for(var i = 2; i <= n; i++) {
-                f = a + b;
-                a = b;
-                b = f;
-            }
-            return f;
-        };
-   
-        function isFib(val){
-            var prev = 0;
-            var curr = 1;
-            while(prev<=val){
-                if(prev == val){
-                    
-                    var isnum = true;
-					
-					var count = 0;
-					var fibolist = [];
-					
-					while(count < 5) {
-					
-					val++
-					
-					var prev = 0;
-					var curr = 1;
-			
-					while(prev<=val){
-						if(prev == val){
-										 
-							count++;
-							fibolist.push(val);
-							var isnum = true;
-							
-						} else {
-							var isnum = false;
-						}
-						curr = prev + curr;
-						prev = curr - prev;
-					}
-					
-					}
-					bot.reply(message,'next numbers: ' +  fibolist );
-					
-					
-                    return;
-                } else {
-                    var isnum = false;
-                }
-                curr = prev + curr;
-                prev = curr - prev;
-            }
-            
-			bot.reply(message,'not fibonacci. ');
-			
-        };
-        isFib(number);
-       
-    });
- 
-}); 
+    var fibonacci = fibo.calculateFibonacciUpto(parameter);
+
+    if (fibonacci[fibonacci.length-1] !== parameter) {
+        bot.reply(message, 'That is not a Fibonacci number!');
+    }
+    else {
+        var nextFibs = fibo.calculateNextFiveFibonacci(fibonacci);
+        bot.reply(message,"That is a Fibonacci number! Here are the next 5: " + nextFibs);
+    }
+});
 
 
 function formatUptime(uptime) {
