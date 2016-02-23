@@ -124,13 +124,16 @@ controller.hears(['call me (.*)'],'direct_message,direct_mention,mention',functi
 controller.hears(['prime (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var matches = message.text.match(/prime (.*)/i);
     var number = parseInt(matches[1]);
-
+    var primes = nextTenPrimes(number);
+    var primes = lastTenPrimes(number);
     if (number >=0){
         if(isPrime(number)) {
             bot.reply(message, 'number is a prime');
         } else {
 
-            bot.reply(message, 'number is not a prime');
+            //bot.reply(message, 'number is not a prime, next 10 primes are ' + primes.toString());
+
+            bot.reply(message, 'number is not a prime, last 10 primes are ' + primes.toString());
         }
     }
 
@@ -234,4 +237,29 @@ function isPrime(n) {
         if (n%i==0) return false;
     }
     return true;
+}
+
+function nextTenPrimes(n) {
+    var primes = [];
+
+    do{
+        if(isPrime(n)){
+            primes.push(n);
+        }
+        n++;
+    }while(primes.length <10)
+    return primes;
+}
+
+function lastTenPrimes(n) {
+    var primes = [];
+
+    do{
+        if(isPrime(n)){
+            primes.push(n);
+        }
+        n--;
+        if(n < 1) break;
+    }while(primes.length <10)
+    return primes;
 }
