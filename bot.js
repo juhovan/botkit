@@ -155,7 +155,7 @@ controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,m
     controller.storage.users.get(message.user,function(err, user) {
         if (city) {
 		
-		weather.find({search: ''+city+', CA', degreeType: 'F'}, function(err, result) {
+		weather.find({search: ''+city+'', degreeType: 'C'}, function(err, result) {
 		if(err) console.log(err);
 		
 		/*
@@ -166,7 +166,7 @@ controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,m
 		var temperature = JSON.stringify(result[0].current.temperature, null, 2);
 		var weather = JSON.stringify(result[0].current.skytext, null, 2);
 		
-		bot.reply(message,'The weather in ' + cityname + ' ,' +' Temperature: ' + temperature + ' ,' + "Weather: " + weather);
+		bot.reply(message,'The weather in ' + cityname + ' ,' +' Temperature: ' + temperature + 'C ,' + " Weather: " + weather);
 		
 		});
 
