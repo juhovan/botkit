@@ -74,7 +74,7 @@ if (!process.env.token) {
 var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
-var weather = require('weather-js');
+var weather = require('./weather/lib/weather.js');
 
 var controller = Botkit.slackbot({
     debug: true,
