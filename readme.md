@@ -45,7 +45,7 @@ npm install --production
 
 2) First make a bot integration inside of your Slack channel. Go here:
 
-https://my.slack.com/services/new/bot
+
 
 Enter a name for your bot.
 Make it something fun and friendly, but avoid a single task specific name.
