@@ -71,6 +71,7 @@ if (!process.env.token) {
     process.exit(1);
 }
 
+var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
 
@@ -167,7 +168,6 @@ controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(b
         ]);
     });
 });
-
 
 controller.hears(['uptime','identify yourself','who are you','what is your name'],'direct_message,direct_mention,mention',function(bot, message) {
 
@@ -311,6 +311,35 @@ controller.storage.users.get(message.user,function(err, user) {
 });
 
 
+controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
+    if (message.text === 'fibonacci') {
+        bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+    }
+});
+
+controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
+    var parameter = parseInt(message.match[1]);
+    
+    var fibonacci = calculateFibonacciUpto(parameter);
+    
+    if (fibonacci[fibonacci.length-1] !== parameter) {
+        bot.reply(message, 'That is not a Fibonacci number!');
+    }
+    else {
+        bot.reply(message, fibonacci.slice(fibonacci.length-10,fibonacci.length).join(', '));
+    }
+});
+
+function calculateFibonacciUpto(goal) {
+    var fibonacci = [1, 1];
+    
+    while (fibonacci[fibonacci.length-1] < goal) {
+        fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
+    }
+    
+    return fibonacci;
+}
+
 function formatUptime(uptime) {
     var unit = 'second';
     if (uptime > 60) {
@@ -328,3 +357,39 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
+
+controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+    if (message.text === "prime") {
+        return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
+    }
+});
+
+controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+
+    var parameter = parseInt(message.match[1]);
+
+    if (MathHelper.isPrime(parameter)) {
+        var primes = new Array();
+        var number = parameter + 1;
+
+        while (primes.length < 10) {
+
+            if (MathHelper.isPrime(number)) {
+                primes.push(number);
+            }
+
+            number++;
+        }
+
+        var reply = "";
+        for (var i = 0; i < primes.length; i++) {
+            reply += primes[i] + " ";
+        }
+
+        return bot.reply(message, reply);
+    }
+    else {
+        return bot.reply(message, "your parameter: " + parameter + " is not Prime number");
+    }
+});
+
