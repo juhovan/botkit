@@ -158,7 +158,9 @@ controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,m
 		weather.find({search: ''+city+', CA', degreeType: 'F'}, function(err, result) {
 		if(err) console.log(err);
 		
-		console.log("LOCATION" + JSON.stringify(result[0].location.name, null, 2));
+		/*
+		console.log("LOCATION " + JSON.stringify(result[0].location.name, null, 2));
+		*/
 		
 		var cityname = JSON.stringify(result[0].location.name, null, 2);
 		var temperature = JSON.stringify(result[0].current.temperature, null, 2);
@@ -174,31 +176,6 @@ controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,m
 		
     });
 });
-
-function replacer(key,value)
-{
-    if (key=="current") return value;
-    else if (key=="location") return value;
-    else return undefined;
-}
-
-function getWeather(city) {
-
-
-  weather.find({search: ''+city+', CA', degreeType: 'F'}, function(err, result) {
-  if(err) console.log(err);
-	/*
-  console.log(JSON.stringify(result, null, 2));
-  */
-  var info = JSON.stringify(result, null, 2);
-  
-  
-  return result;
-});
-
-}
-
-
 
 
 controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(bot, message) {
