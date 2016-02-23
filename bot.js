@@ -73,6 +73,7 @@ if (!process.env.token) {
 
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
+var botmath = require('./botmath.js');
 
 var controller = Botkit.slackbot({
     debug: true,
@@ -263,3 +264,14 @@ function lastTenPrimes(n) {
     }while(primes.length <10)
     return primes;
 }
+
+controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+
+	var num1 = message.match[1];
+	var num2 = message.match[2];
+		
+	if (num1 != null && num2 != null) {
+		return bot.reply(message, num1 + ' + ' + num2 + ' = ' + botmath.sum(num1, num2));
+	}
+});
+
