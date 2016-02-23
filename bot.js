@@ -121,6 +121,34 @@ controller.hears(['call me (.*)'],'direct_message,direct_mention,mention',functi
     });
 });
 
+controller.hears(['prime (.*)'], 'direct_message,direct_mention,mention', function(bot, message) {
+    var matches = message.text.match(/prime (.*)/i);
+    var number = parseInt(matches[1]);
+
+    if (number >=0){
+        if(isPrime(number)) {
+            bot.reply(message, 'number is a prime');
+        } else {
+
+            bot.reply(message, 'number is not a prime');
+        }
+    }
+
+
+
+});
+
+controller.hears(['prime.'], 'direct_message,direct_mention,mention', function(bot, message) {
+
+    var i = message.text.lastIndexOf('.');
+    if (i != -1) {
+        bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
+
+    }
+});
+
+
+
 controller.hears(['what is my name','who am i'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
@@ -128,6 +156,16 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
             bot.reply(message,'Your name is ' + user.name);
         } else {
             bot.reply(message,'I don\'t know yet!');
+        }
+    });
+});
+
+controller.hears(['who made you'], 'direct_message,direct_mention,mention', function(bot, message) {
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,'You made me - master ' + user.name + '!!');
+        } else {
+            bot.reply(message,'I don\'t know yet!.');
         }
     });
 });
@@ -185,4 +223,15 @@ function formatUptime(uptime) {
 
     uptime = uptime + ' ' + unit;
     return uptime;
+}
+
+
+function isPrime(n) {
+    if (isNaN(n) || !isFinite(n) || n%1 || n<2) return false;
+    if (n%2==0) return (n==2);
+    var m=Math.sqrt(n);
+    for (var i=3;i<=m;i+=2) {
+        if (n%i==0) return false;
+    }
+    return true;
 }
