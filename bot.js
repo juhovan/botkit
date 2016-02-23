@@ -84,45 +84,6 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
-controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
-    var matches = message.text.match(/prime (.*)/i);
-    var number = matches[1];
-    var n = 2;
-    var isprime=true;
-    for(var i=2; i<=number; i++){
-      if(number%i==0 && i!=number){
-        isprime=false
-      }
-    }
-    if(number<2){
-      isprime=false;
-    }
-    if(isprime){
-      bot.reply(message, number+' is a Prime');
-    }
-    else{
-      bot.reply(message, number+' is not a Prime, the previous 10 primes are:');
-
-      var string = '';
-      var match = 0;
-      var n = number;
-      while (match !=10 && n!=1){
-        var isprime = true;
-        for(var count = 2;count<n;count++ ){
-          if(n%count === 0 && count!==n){
-              isprime = false;
-          }
-
-        }    
-        if(isprime == true){
-          string +=n+' ';
-          match = match+1;
-        }
-        n--;
-     }
-     bot.reply(message,string);
-    }
-});
 
 controller.hears(['weather (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
     var location = message.text.match(/weather (.*)/i);
@@ -137,27 +98,6 @@ controller.hears(['weather (.*)'],'direct_message,direct_mention,mention',functi
     });
 });
 
-
-controller.hears(['prime'],'direct_message,direct_mention,mention',function(bot, message) {  
- var string = '';
- var match = 0;
- var n = 2;
- while (match !=10){
-    var isprime = true;
-    for(var count = 2;count<n;count++ ){
-      if(n%count === 0 && count!==n){
-          isprime = false;
-      }
-
-    }    
-    if(isprime == true){
-      string +=n+' ';
-      match = match+1;
-    }
-    n++;
- }
- bot.reply(message,string);
-});
 
 controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function(bot, message) {
 
