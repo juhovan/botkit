@@ -4,6 +4,7 @@
   "description": "Building blocks for Building Bots",
   "main": "lib/Botkit.js",
   "dependencies": {
+    "weather-js": "",
     "body-parser": "^1.14.2",
     "debug": "2.2.0",
     "eventemitter2": "0.4.14",
