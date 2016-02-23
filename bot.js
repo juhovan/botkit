@@ -26,7 +26,7 @@ This bot demonstrates many of the core features of Botkit:
   Run your bot from the command line:
 
     set token=<MY TOKEN>
-	
+
 	node bot.js
 
 # USE THE BOT:
@@ -171,32 +171,36 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
 
 controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
     if (message.text === 'fibonacci') {
-        bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+        bot.reply(message, '1, 1, 2, 3, 5');
     }
 });
 
 controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var parameter = parseInt(message.match[1]);
-    
+
     var fibonacci = calculateFibonacciUpto(parameter);
-    
-    if (fibonacci[fibonacci.length-1] !== parameter) {
+
+    if (fibonacci[fibonacci.length-6] !== parameter) {
         bot.reply(message, 'That is not a Fibonacci number!');
     }
     else {
-        bot.reply(message, fibonacci.slice(fibonacci.length-10,fibonacci.length).join(', '));
+        bot.reply(message, fibonacci.slice(fibonacci.length-5,fibonacci.length).join(', '));
     }
 });
 
 function calculateFibonacciUpto(goal) {
     var fibonacci = [1, 1];
-    
+
     while (fibonacci[fibonacci.length-1] < goal) {
         fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
     }
-    
+	 	for(i=0; i< 5 ; i++){
+			fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
+		}
+
     return fibonacci;
 }
+
 
 function formatUptime(uptime) {
     var unit = 'second';
