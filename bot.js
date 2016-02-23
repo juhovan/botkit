@@ -210,13 +210,14 @@ controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function
 			
 			while(count < 10)
 			{
-				number++;
+				number--;
 				
 				jako = number / number;
 				jako2 = number / 2;
 				
-				if(jako == 1 && jako2 % 1 != 0)
+				if(jako == 1 && jako2 % 1 !== 0 || number == 2 || number == -2 || number == 0)
 				{
+		
 					primenumbers.push(number);
 					count++;
 					
@@ -358,6 +359,7 @@ function formatUptime(uptime) {
     return uptime;
 }
 
+/*
 controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
     if (message.text === "prime") {
         return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
@@ -392,4 +394,5 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
         return bot.reply(message, "your parameter: " + parameter + " is not Prime number");
     }
 });
+*/
 
