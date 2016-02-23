@@ -64,7 +64,7 @@ This bot demonstrates many of the core features of Botkit:
     -> http://howdy.ai/botkit
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+var weather = require('weather-js');
 
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
@@ -143,6 +143,46 @@ controller.hears(['who made me'],'direct_message,direct_mention,mention',functio
         }
     });
 });
+
+controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+	    var matches = message.text.match(/how is the weather in (.*)/i);
+		var city = matches[1]; 
+
+    controller.storage.users.get(message.user,function(err, user) {
+        if (city) {
+		
+		var weather = getWeather(city);
+		
+		bot.reply(message,'The weather in city: ' + city + '' +weather);
+		getWeather(city);
+		
+
+        } else {
+            bot.reply(message,'Please give city.');
+        }
+    });
+});
+
+function getWeather(city) {
+
+
+			weather.find({search: ''+city+', CA', degreeType: 'F'}, function(err, result) {
+  if(err) console.log(err);
+	/*
+  console.log(JSON.stringify(result, null, 2));
+  */
+  var info = JSON.stringify(result, null, 2);
+  console.log("info muuttujan debuggi." + info);
+  
+  return info;
+});
+
+}
+
+
+
+
 controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(bot, message) {
 
     bot.startConversation(message,function(err, convo) {
