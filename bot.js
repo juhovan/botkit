@@ -294,6 +294,7 @@ controller.storage.users.get(message.user,function(err, user) {
 					}
 					bot.reply(message,'next numbers: ' +  fibolist );
 					
+					
                     return;
                 } else {
                     var isnum = false;
