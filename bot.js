@@ -147,6 +147,20 @@ controller.hears(['who made me'],'direct_message,direct_mention,mention',functio
     });
 });
 
+controller.on('user_channel_join',function(bot, message) {
+		var poembase = [
+				"Roses are red, my cat eat dogs for breakfast",
+				"Gangters are like pets",
+				"Roses are red Violets are blue Rhyming is hard Like I am for you",
+				"Roses are okay Violets are fine You be the 6 And I'll be the 9",
+				"Roses are red Violets are violet Here is my number Why don't you dial it?",
+		];
+		var selecteditem = parseInt(poembase.length * Math.random(), 10);
+		var thispoem = poembase[selecteditem];
+		
+        bot.reply(message, 'My poem is here: ' + thispoem);
+});
+
 controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
 
 	    var matches = message.text.match(/how is the weather in (.*)/i);
