@@ -65,7 +65,6 @@ This bot demonstrates many of the core features of Botkit:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
     process.exit(1);
@@ -139,7 +138,7 @@ controller.hears(['call me (.*)'],'direct_message,direct_mention,mention',functi
 });
 
 controller.on('user_channel_join',function(bot,message) {
-    var rnd = Math.floor(Math.random() * 5); //number between 0 and 9
+    var rnd = (process.uptime()*1000)%4; 
     switch(rnd){   
         case 0:
         bot.reply(message,'Starved of living');
