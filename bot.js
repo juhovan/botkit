@@ -211,6 +211,12 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
 
 });
 
+controller.hears(['how old are you'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    bot.reply(message,':robot_face: I am a bot named <@' + bot.identity.name + '>. I am ' + uptime + ' old');
+
+});
+
 function formatUptime(uptime) {
     var unit = 'second';
     if (uptime > 60) {
