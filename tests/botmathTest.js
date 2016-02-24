@@ -13,4 +13,35 @@ describe('botmath', function() {
 		assert.ok(isNaN(bothmath.sum(1335, 'a')));
 	});
   });
+  
+		
+});
+
+describe('botmath', function() {
+	describe('isPrime', function() {
+		it('should return true if the number is Prime', function() {
+			assert.equal(false, bothmath.isPrime(-2));
+			assert.equal(true, bothmath.isPrime(5));
+			assert.equal(false, bothmath.isPrime(6));
+		});
+		
+		it('should return NaN if number is not numeric', function () {
+			assert.ok(!isNaN(bothmath.isPrime('a')));
+			assert.ok(!isNaN(bothmath.isPrime(14)));
+		});
+	});
+});
+
+describe('botmath', function() {
+ describe('isFibonacci', function () {
+   it('should return 1 if number is fibonacci', function () {
+     assert.equal(1, bothmath.isFibonacci(144));
+     assert.equal(1, bothmath.isFibonacci(13));
+   })
+    it('should return NaN if value is string', function () {
+        assert.ok(isNaN(bothmath.isFibonacci('a')));
+               assert.ok(isNaN(bothmath.isFibonacci(14)));
+               assert.ok(isNaN(bothmath.isFibonacci(-1)));
+    });
+ });
 });
