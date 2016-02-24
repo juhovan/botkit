@@ -285,3 +285,15 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
         return bot.reply(message, reply);
     }
 });
+
+controller.hears('give (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+    var gameName = message.match[1];
+    var request = require('request');
+    request('http://www.speedrun.com/api_records.php?series=' + gameName, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var parse = JSON.parse(body);
+        console.log(parse);
+        bot.reply(message, parse[Object.keys(parse)[0]][Object.keys(parse[Object.keys(parse)[0]])[0]]['time']);
+      }
+    })
+});
