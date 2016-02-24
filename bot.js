@@ -40,15 +40,12 @@ if (!process.env.token) {
     console.log('Error: Specify token in environment');
     process.exit(1);
 }
-var weather = require('./weather/lib/weather.js');
+var weather = require('weather-js');
 var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
-<<<<<<< HEAD
-=======
 var botmath = require('./botmath.js');
 
->>>>>>> origin/test
 var controller = Botkit.slackbot({
     debug: true,
 });
@@ -132,24 +129,6 @@ controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', functio
     }
 });
 
-/*controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
- var parameter = parseInt(message.match[1]);
- var fibonacci = calculateFibonacciDownto(parameter);
- if (fibonacci[fibonacci.length - 5] !== parameter) {
- bot.reply(message, 'That is not a Fibonacci number!');
- }
- else {
- bot.reply(message, fibonacci.slice(fibonacci.length-5,fibonacci.length).join(', '));
- }
- });
- function calculateFibonacciDownto(goal) {
- var fibonacci = [1,1];
- while (fibonacci[fibonacci.length-1] < 15) {
- fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
- }
- return fibonacci;
- }*/
-
 controller.hears(['fibonacci (.*)'], 'direct_message,mention', function (bot, message) {
     var num = message.match[1];
     if (isFibonacci(num) == 1) {
@@ -202,7 +181,6 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
-<<<<<<< HEAD
 controller.hears('prime', ['direct_message', 'direct_mention', 'mention'], function (bot, message) {
     if (message.text === "prime") {
         return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
@@ -244,7 +222,6 @@ controller.hears(['How is the weather in (.*)'], 'direct_message,mention', funct
         
     });
 });
-=======
 
 controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
 
@@ -255,5 +232,3 @@ controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'm
 		return bot.reply(message, num1 + ' + ' + num2 + ' = ' + botmath.sum(num1, num2));
 	}
 });
-
->>>>>>> origin/test
