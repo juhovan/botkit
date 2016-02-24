@@ -138,6 +138,34 @@ controller.hears(['call me (.*)'],'direct_message,direct_mention,mention',functi
     });
 });
 
+controller.on('user_channel_join',function(bot,message) {
+    var rnd = Math.floor(Math.random() * 5); //number between 0 and 9
+    switch(rnd){   
+        case 0:
+        bot.reply(message,'Starved of living');
+        bot.reply(message,'a life beleaguered');
+        bot.reply(message,'some welcome death');
+        break;
+        case 1:
+        bot.reply(message,'wedding cake');
+        bot.reply(message,'filled with fruits and nuts');
+        bot.reply(message,'welcome  family');
+        break;
+        case 2:
+        bot.reply(message,'Is your song of spring');
+        bot.reply(message,'a welcoming?');
+        bot.reply(message,'for you are welcome, so sing.');
+        break;
+        case 3:
+        bot.reply(message,'Submarines sinking ships');
+        bot.reply(message,'and Red Baron in the skies');
+        bot.reply(message,'welcome to the war');
+        break;
+        default:
+        bot.reply(message,'welcome to the channel.');
+    }
+}); 
+
 controller.hears(['what is my name','who am i'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
