@@ -76,6 +76,10 @@ var Botkit = require('./lib/Botkit.js');
 var os = require('os');
 var botmath = require('./botmath.js');
 var fibo = require('./fibonacci.js');
+var http = require('http');
+var request = require('request');
+
+
 
 
 var controller = Botkit.slackbot({
@@ -351,4 +355,77 @@ controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'm
 	}
 
 });
+
+/*controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+    var matches = message.text.match(/speedrun (.*)/i);
+    var name = matches[1];
+
+    var gameArray = new Object();
+
+    gameArray = getGameInfo(name);
+    console.log(gameArray);
+
+    //var parsed = JSON.parse(gameInfo);
+
+    /*var gameArray = [];
+
+    for(var x in parsed){
+        gameArray.push(parsed[x]);
+    }
+
+    if(gameArray)   {
+        bot.reply(message, 'Here are some speedruns that I found!');
+
+        for(var key in gameArray) {
+            bot.reply(message, key);
+        }
+    } else {
+        bot.reply(message,'Oops! I didnt find any speedruns for ' + name );
+
+    }
+
+}); */
+
+controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    var matches = message.text.match(/speedrun (.*)/i);
+    var name = matches[1];
+
+    const apiUrl = 'http://www.speedrun.com/api_records.php?series=';
+    var url = apiUrl.concat(name);
+
+        request(url, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    //console.log(body);
+
+                    var parsed = JSON.parse(body);
+                    var gameArray = [];
+
+                    for(var x in parsed){
+                        gameArray.push(parsed[x]);
+                    }
+                    console.log(gameArray)
+                    bot.reply(message, 'Here are some speedruns that I found!');
+
+                    function logArrayElements(element, index, array) {
+
+                        var name = JSON.stringify(element);
+
+                        bot.reply(message, 'Name: ' + name);
+                    }
+
+                    var showDetails = function(name , player, video, len) {
+                        bot.reply(message, 'Name: ' + name);
+                    }
+                    gameArray.forEach(logArrayElements);
+
+
+                }
+                if(error) {
+                    console.log(error);
+        }
+    })
+
+});
+
 
