@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/teroanttila/botkit.svg?branch=master)](https://travis-ci.org/teroanttila/botkit.svg?branch=master)
+
 # [Botkit](http://howdy.ai/botkit) - Best course ever!
 
 Botkit designed to ease the process of designing and running useful, creative or
