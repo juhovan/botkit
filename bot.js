@@ -85,17 +85,33 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
 // Weather
 controller.hears(['weather (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
     var location = message.text.match(/weather (.*)/i);
-    var location = location[1];
+    var array= location[1].split(" ");
+    if(array[0]=='in'){
+        location=array[1];
+    }
+    else{
+        location=array[0];
+    }
     weather.find({search: location+', FI', degreeType: 'C'}, function(err, result) {
-        var array = result
-        var temp = array[0].current.temperature
-        var feeltemp = array[0].current.feelslike
-        var place = array[0].current.observationpoint
-        var skytext = array[0].current.skytext
-        bot.reply(message, "Right now in "+place+" the sky is "+skytext+". It's "+temp+'C but it feels like '+feeltemp+'C to be honest.');
+        try{
+            var array = result;
+            var temp = array[0].current.temperature;
+            var feeltemp = array[0].current.feelslike;
+            var place = array[0].current.observationpoint;
+            var skytext = array[0].current.skytext;
+            bot.reply(message, "Right now in "+place+" the sky is "+skytext+". It's "+temp+'C but it feels like '+feeltemp+'C to be honest.');
+        }
+        catch(err){
+            bot.reply(message,'I don\'t understand.');
+            console.log(err);
+        }
     });
 });
 
