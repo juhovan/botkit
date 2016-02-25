@@ -356,36 +356,6 @@ controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'm
 
 });
 
-/*controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
-    var matches = message.text.match(/speedrun (.*)/i);
-    var name = matches[1];
-
-    var gameArray = new Object();
-
-    gameArray = getGameInfo(name);
-    console.log(gameArray);
-
-    //var parsed = JSON.parse(gameInfo);
-
-    /*var gameArray = [];
-
-    for(var x in parsed){
-        gameArray.push(parsed[x]);
-    }
-
-    if(gameArray)   {
-        bot.reply(message, 'Here are some speedruns that I found!');
-
-        for(var key in gameArray) {
-            bot.reply(message, key);
-        }
-    } else {
-        bot.reply(message,'Oops! I didnt find any speedruns for ' + name );
-
-    }
-
-}); */
-
 controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
 
     var matches = message.text.match(/speedrun (.*)/i);
@@ -396,36 +366,27 @@ controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',funct
 
         request(url, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    //console.log(body);
-
                     var parsed = JSON.parse(body);
                     var gameArray = [];
 
                     for(var x in parsed){
                         gameArray.push(parsed[x]);
                     }
-                    console.log(gameArray)
-                    bot.reply(message, 'Here are some speedruns that I found!');
 
-                    function logArrayElements(element, index, array) {
+                    bot.reply(message,'Here are some speedruns that I found!');
 
-                        var name = JSON.stringify(element);
-
-                        bot.reply(message, 'Name: ' + name);
+                    for (var item in parsed) {
+                        bot.reply(message,'Game: ' + item);
+                        for (var subItem in parsed[item]) {
+                            var reply = JSON.stringify(parsed[item][subItem], null, 4);
+                            bot.reply(message,reply);
+                        }
                     }
-
-                    var showDetails = function(name , player, video, len) {
-                        bot.reply(message, 'Name: ' + name);
-                    }
-                    gameArray.forEach(logArrayElements);
-
-
                 }
                 if(error) {
                     console.log(error);
         }
     })
-
 });
 
 
