@@ -44,8 +44,7 @@ var weather = require('./weather/lib/weather.js');
 var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
-<<<<<<< HEAD
-=======
+
 var botmath = require('./botmath.js');
 
 >>>>>>> origin/test
@@ -202,7 +201,7 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
-<<<<<<< HEAD
+
 controller.hears('prime', ['direct_message', 'direct_mention', 'mention'], function (bot, message) {
     if (message.text === "prime") {
         return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
@@ -244,7 +243,7 @@ controller.hears(['How is the weather in (.*)'], 'direct_message,mention', funct
         
     });
 });
-=======
+
 
 controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
 
@@ -256,4 +255,3 @@ controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'm
 	}
 });
 
->>>>>>> origin/test

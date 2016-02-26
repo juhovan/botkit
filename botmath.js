@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3f79b876dffff0bb273821454b62dcf4e2aecec2
 var isPrime = function (n) {
  if (isNaN(n) || !isFinite(n) || n%1 || n<2) return false; 
  if (n%2==0) return (n==2);
@@ -10,13 +14,29 @@ var isPrime = function (n) {
 
 module.exports.isPrime = isPrime;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3f79b876dffff0bb273821454b62dcf4e2aecec2
 var sum = function (num1, num2) {
 	return parseFloat(num1) + parseFloat(num2);
 }
 
 module.exports.sum = sum;
 
+<<<<<<< HEAD
+=======
+var calculateFibonacciUpto = function(goal) {
+	var fibonacci = [1, 1];
+	while (fibonacci[fibonacci.length-1] < goal) {
+		fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
+	}
+	return fibonacci;
+}
+
+module.exports.calculateFibonacciUpto = calculateFibonacciUpto;
+
+>>>>>>> 3f79b876dffff0bb273821454b62dcf4e2aecec2
 var isFibonacci = function (number) {
    var prev = 0;
    var curr = 1;
@@ -29,6 +49,7 @@ var isFibonacci = function (number) {
    }}
    
 module.exports.isFibonacci = isFibonacci;
+<<<<<<< HEAD
    
 var findnextFibonacci = function (lowerLimit) {    
 	for (lowerLimit++; !isFibonacci(lowerLimit); lowerLimit++){
@@ -38,3 +59,12 @@ var findnextFibonacci = function (lowerLimit) {
 
 module.exports.findnextFibonacci = findnextFibonacci;
 
+=======
+
+var findnextFibonacci = function (lowerLimit) {
+	for (lowerLimit++; !isFibonacci(lowerLimit); lowerLimit++);
+	return lowerLimit;
+}
+
+module.exports.findnextFibonacci = findnextFibonacci;
+>>>>>>> 3f79b876dffff0bb273821454b62dcf4e2aecec2
