@@ -133,6 +133,17 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
     });
 });
 
+controller.hears(['who made you'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,'' + user.name);
+        } else {
+            bot.reply(message,'Michael');
+        }
+    });
+});
+
 
 controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(bot, message) {
 
