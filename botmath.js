@@ -17,9 +17,10 @@ var sum = function (num1, num2) {
 module.exports.sum = sum;
 
 var googlefunc = function (searchstring) {
-	//var searchstring = searchstring;
 	
-	var link = 'http://lmgtfy.com/?q='+ searchstring;
+	var tosearch = searchstring.replace(/ /g, '+');
+	
+	var link = 'http://lmgtfy.com/?q='+ tosearch;
 	console.log('Link' + link);
 	
 	return link;
