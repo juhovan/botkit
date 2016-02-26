@@ -320,7 +320,7 @@ controller.hears('give (.*)',['direct_message', 'direct_mention', 'mention'],fun
     })
 });
 
-controller.hears(['google (.*)','google haku (.*)'],['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+controller.hears(['google (.*)','google this(.*)','google haku (.*)'],['direct_message', 'direct_mention', 'mention'],function(bot,message) {
       var keyWord = message.match[1];
       var google = require('google');
 
