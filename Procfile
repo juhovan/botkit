@@ -1,0 +1,1 @@
+worker: token=xoxb-22469172560-FHIXCnTkvGU0fTo1m6WmUnCv node bot.js
