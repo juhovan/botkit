@@ -106,6 +106,28 @@ controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function
     });
 });
 
+controller.hears(['hei','moi'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    bot.api.reactions.add({
+        timestamp: message.ts,
+        channel: message.channel,
+        name: 'robot_face',
+    },function(err, res) {
+        if (err) {
+            bot.botkit.log('Failed to add emoji reaction :(',err);
+        }
+    });
+
+
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,'Hei ' + user.name + '.' + 'Hauska tavata!!');
+        } else {
+            bot.reply(message,'Hei. Hauska tutustua!');
+        }
+    });
+});
+
 controller.hears(['call me (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
     var matches = message.text.match(/call me (.*)/i);
     var name = matches[1];
