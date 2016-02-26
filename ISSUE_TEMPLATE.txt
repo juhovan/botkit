@@ -1,0 +1,7 @@
+What happened?
+
+What OS?
+
+Steps to reproduce?
+
+Priority
