@@ -389,4 +389,37 @@ controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',funct
     })
 });
 
+controller.hears(['xkcd new'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    const url = 'https://xkcd.com/info.0.json';
+
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var parsed = JSON.parse(body);
+            bot.reply(message,'Here is the latest XKCD comic: ' + parsed['img']);
+        }
+        if(error) {
+            console.log(error);
+        }
+    })
+});
+
+controller.hears(['xkcd random'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    const host = 'https://xkcd.com/';
+    const end = '/info.0.json';
+    var num = Math.floor(Math.random() * 1648);
+    var url = host + num + end;
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var parsed = JSON.parse(body);
+            console.log('PARSED: ' + parsed);
+            bot.reply(message,'Here is a random XKCD comic: ' + parsed['img']);
+        }
+        if(error) {
+            console.log(error);
+        }
+    })
+});
+
 
