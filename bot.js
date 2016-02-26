@@ -136,6 +136,21 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
     });
 });
 
+
+controller.hears(['google','googleta'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+		
+		if(err) console.log(err);
+		
+         var link = String(botmath.googlefunc('kala ravintola'));
+		 console.log('link in callback' + link);
+		
+            bot.reply(message,'Hi, I found a anwser for you. Check this out: ' + link);
+        
+    });
+});
+
 controller.hears(['who made me'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {

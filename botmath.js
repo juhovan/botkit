@@ -16,3 +16,14 @@ var sum = function (num1, num2) {
 
 module.exports.sum = sum;
 
+var googlefunc = function (searchstring) {
+	//var searchstring = searchstring;
+	
+	var link = 'http://lmgtfy.com/?q='+ searchstring;
+	console.log('Link' + link);
+	
+	return link;
+}
+
+module.exports.googlefunc = googlefunc;
+
