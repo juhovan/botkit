@@ -142,10 +142,9 @@ controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,
 
 	
 
-	var	matches = message.text.match(/google (.*)/i);
+	var	matches = message.text.match(/(google|googleta) (.*)/i);
 		
-		
-	var sentence = matches[1];
+	var sentence = matches[2];
 	
 	console.log(sentence);
 	
