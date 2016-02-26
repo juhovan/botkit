@@ -83,6 +83,132 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
+const weather = require('weather-js');
+const request = require('request');
+
+controller.hears(['issues (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+    if (message.match[1].indexOf(', ')===-1) {
+        bot.reply(message,'wrong format', null, 2);
+    }else {
+        var input = message.match[1].split(", ");
+        var options = {
+            url: "https://api.github.com/repos/"+input[0]+"/"+input[1]+"/issues",
+            timeout: 15000,
+            headers: {
+                'User-Agent': input[0]
+            }
+        };
+        request.get(options, function (err, res, body) {
+            if (err) {
+                console.log("ERROR: " + err);
+                return callback(err);
+            }
+            else if (res.statusCode !== 200) {
+                console.log("res.statusCode !== 200");
+                return callback('Request failed (' + res.statusCode + ')');
+            }
+            else {
+                var issues = JSON.parse(body);
+
+                var issueStr = "";
+                for(var i = 0; i<issues.length; i++){
+                    var issue = issues[i];
+                    for(var j = 2; j<input.length; j++){
+                        if(issue.hasOwnProperty(input[j])){
+                            issueStr+= input[j]+": " + issue[input[j]] + ", ";
+                        }
+                        issueStr+="\n";
+                    }
+                    issueStr+="\n";
+                }
+                bot.reply(message, issueStr, null, 2);
+            }
+        });
+    }
+
+});
+
+controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+    var gameInfo;
+    if (message.match[1].indexOf(', ')!==-1) {
+        gameInfo = message.match[1].split(", ");
+    }else{
+        gameInfo=[];
+        gameInfo.push(message.match[1]);
+    }
+    console.log(gameInfo);
+    var gamename = gameInfo[0];
+    console.log(gamename);
+    var difficulty;
+    if(gameInfo.length>1){
+        difficulty=gameInfo[1];
+    }
+    gamename.replace(' ', '%20');
+    request.get({url: "http://www.speedrun.com/api_records.php?game="+gamename, timeout: 15000}, function(err, res, body) {
+        if(err){
+            console.log("ERROR: " + err);
+            return callback(err);
+        }
+        else if(res.statusCode !== 200) {
+            console.log("res.statusCode !== 200");
+            return callback('Request failed (' + res.statusCode + ')');
+        }
+        else{
+            body = JSON.parse(body);
+            console.log(body);
+            if(body.hasOwnProperty(gamename)){
+                var game = body[gamename];
+                if(difficulty !== undefined && game.hasOwnProperty(difficulty)){
+                    var gameWithDif =game[difficulty];
+                    bot.reply(message,gameWithDif['timeigt'], null, 2);
+                    bot.reply(message,gameWithDif['video'], null, 2);
+                }else if(difficulty===undefined){
+                    for(key in game){
+                        bot.reply(message,key, null, 2);
+                    }
+                }
+            }
+        }
+    });
+
+});
+
+controller.on('user_typing',function(bot, message) {
+	controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message, user.name + ' is typing something. Is it going to be a novel?');
+        } else {
+            bot.reply(message,'Someone is typing... STOP IT! DO NOT TYPE! YOU ARE MAKING ME NERVOUS');
+        }
+    });
+});
+
+controller.on('user_channel_join',function(bot, message) {
+	controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,'Welcome to the channel ' + user.name + '!!');
+        } else {
+            bot.reply(message,'Welcome to the channel!');
+        }
+    });
+});
+
+controller.hears(['How is the weather in (.*), (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    var input1 = message.match[1];
+    var input2 = message.match[2];
+    console.log(input1);
+    console.log(input2);
+    weather.find({search: input1 + " " + input2, degreeType: 'C'}, function (err, result) {
+        console.log(JSON.stringify(result, null, 2));
+        if(result !== undefined){
+            bot.reply(message, JSON.stringify(result[0].current.temperature, null, 2));
+        }else{
+            bot.reply(message, "You dont make any sence");
+        }
+    });
+});
+
 
 controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function(bot, message) {
 
@@ -95,13 +221,14 @@ controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function
             bot.botkit.log('Failed to add emoji reaction :(',err);
         }
     });
-
-
+	var answers = ["Hello", "Hi", "Good day to you", "HELLO-HELLO-HELLO", "Moi", "Salute", "Greetings", "Hallo"]
+	var rand = Math.floor((Math.random() * answers.length));
+	
     controller.storage.users.get(message.user,function(err, user) {
         if (user && user.name) {
-            bot.reply(message,'Hello ' + user.name + '!!');
+            bot.reply(message,answers[rand] + ", " + user.name + '!!');
         } else {
-            bot.reply(message,'Hello.');
+            bot.reply(message,answers[rand]);
         }
     });
 });
@@ -171,7 +298,7 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
 
 controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
     if (message.text === 'fibonacci') {
-        bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+        bot.reply(message, '1, 1, 2, 3, 5');
     }
 });
 
@@ -184,19 +311,32 @@ controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention'
         bot.reply(message, 'That is not a Fibonacci number!');
     }
     else {
-        bot.reply(message, fibonacci.slice(fibonacci.length-10,fibonacci.length).join(', '));
+        var a = fibonacci[fibonacci.length-1];
+        var b;
+        if(fibonacci.length>1){
+            b=fibonacci[fibonacci.length-2];
+        }else{
+            b=0;
+        }
+        var nextFive = [];
+        for(var i = 0; i<5; i++){
+            nextFive.push(a+b);
+            b = a;
+            a = nextFive[i];
+        }
+        bot.reply(message, nextFive.slice(0,nextFive.length).join(', '));
     }
 });
 
 function calculateFibonacciUpto(goal) {
     var fibonacci = [1, 1];
-    
     while (fibonacci[fibonacci.length-1] < goal) {
         fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
     }
-    
     return fibonacci;
 }
+
+// module.exports.calculateFibonacciUpto = calculateFibonacciUpto;
 
 function formatUptime(uptime) {
     var unit = 'second';
@@ -215,6 +355,20 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
+
+
+
+controller.on('channel_leave',function(bot,message) {
+	
+	controller.storage.users.get(message.user, function(err, user) {
+	if(user && user.name) {
+		bot.reply(message,"Ok, " + user.name+", go find a new channel of your own with blackjack and hookers!");
+	}
+	else {
+		bot.reply(message,"Someone left the channel");
+	}
+	});
+});
 
 controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
     if (message.text === "prime") {
@@ -235,8 +389,12 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
             if (MathHelper.isPrime(number)) {
                 primes.push(number);
             }
+            
+            if(number ==0) {
+            	break;
+            }
 
-            number++;
+            number--;
         }
 
         var reply = "";
