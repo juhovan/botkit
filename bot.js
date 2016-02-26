@@ -137,16 +137,27 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
 });
 
 
-controller.hears(['google','googleta'],'direct_message,direct_mention,mention',function(bot, message) {
+controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
 
+	
+
+	var	matches = message.text.match(/google (.*)/i);
+		
+		
+	var sentence = matches[1];
+	
+	console.log(sentence);
+	
     controller.storage.users.get(message.user,function(err, user) {
 		
 		if(err) console.log(err);
 		
-         var link = String(botmath.googlefunc('kala ravintola'));
+         var link = String(botmath.googlefunc(sentence));
 		 console.log('link in callback' + link);
+		 
+		 var randomfunc = botmath.randomanswer();
 		
-            bot.reply(message,'Hi, I found a anwser for you. Check this out: ' + link);
+            bot.reply(message, randomfunc + ' ' + link);
         
     });
 });
