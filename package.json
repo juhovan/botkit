@@ -5,6 +5,7 @@
   "main": "lib/Botkit.js",
   "dependencies": {
     "weather-js": "",
+    "tinyurl": "",
     "body-parser": "^1.14.2",
     "debug": "2.2.0",
     "eventemitter2": "0.4.14",

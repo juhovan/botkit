@@ -65,6 +65,7 @@ This bot demonstrates many of the core features of Botkit:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 var weather = require('weather-js');
+var TinyURL = require('tinyurl');
 
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
@@ -140,6 +141,29 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
     });
 });
 
+
+controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,mention,message_received',function(bot, message) {
+
+	var	matches = message.text.match(/(google|googleta) (.*)/i);
+		
+	var sentence = matches[2];
+	
+	console.log(sentence);
+	
+    controller.storage.users.get(message.user,function(err, user) {
+		
+		if(err) console.log(err);
+		
+        var link = String(botmath.googlefunc(sentence));
+		
+		var randomfunc = botmath.randomanswer();
+		 
+		TinyURL.shorten(link, function(res) {
+				 bot.reply(message, randomfunc + ' ' + res);
+		});
+    });
+});
+
 controller.hears(['who made me'],'direct_message,direct_mention,mention',function(bot, message) {
 
     controller.storage.users.get(message.user,function(err, user) {
@@ -149,6 +173,20 @@ controller.hears(['who made me'],'direct_message,direct_mention,mention',functio
             bot.reply(message,'I don\'t know yet!');
         }
     });
+});
+
+controller.on('user_channel_join',function(bot, message) {
+		var poembase = [
+				"Roses are red, my cat eat dogs for breakfast",
+				"Gangters are like pets",
+				"Roses are red Violets are blue Rhyming is hard Like I am for you",
+				"Roses are okay Violets are fine You be the 6 And I'll be the 9",
+				"Roses are red Violets are violet Here is my number Why don't you dial it?",
+		];
+		var selecteditem = parseInt(poembase.length * Math.random(), 10);
+		var thispoem = poembase[selecteditem];
+		
+        bot.reply(message, 'My poem is here: ' + thispoem);
 });
 
 controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
