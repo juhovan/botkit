@@ -2,4 +2,4 @@
 
 ### Actual behavior
 
-[] I have used the search and couldn't find this issue
+- [ ] I have used the search and couldn't find this issue
