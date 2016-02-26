@@ -65,6 +65,7 @@ This bot demonstrates many of the core features of Botkit:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 var weather = require('weather-js');
+var TinyURL = require('tinyurl');
 
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
@@ -152,13 +153,13 @@ controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,
 		
 		if(err) console.log(err);
 		
-         var link = String(botmath.googlefunc(sentence));
-		 console.log('link in callback' + link);
-		 
-		 var randomfunc = botmath.randomanswer();
+        var link = String(botmath.googlefunc(sentence));
 		
-            bot.reply(message, randomfunc + ' ' + link);
-        
+		var randomfunc = botmath.randomanswer();
+		 
+		TinyURL.shorten(link, function(res) {
+				 bot.reply(message, randomfunc + ' ' + res);
+		});
     });
 });
 
