@@ -319,3 +319,25 @@ controller.hears('give (.*)',['direct_message', 'direct_mention', 'mention'],fun
       }
     })
 });
+
+controller.hears(['google this (.*)','google-haku (.*)'],['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+      var keyWord = message.match[1];
+      var google = require('google');
+
+      google.resultsPerPage = 4;
+      var nextCounter = 0;
+
+      google(keyWord, function (err, next, links){
+        if (err) console.error(err)
+
+        for (var i = 0; i < links.length; ++i) {
+          bot.reply(message, links[i].title + ' - ' + links[i].link);
+          //bot.reply(message, links[i].description + "\n");
+        }
+
+        if (nextCounter < 2) {
+          nextCounter += 1
+          if (next) next()
+        }
+      })
+});
