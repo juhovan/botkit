@@ -138,9 +138,7 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
 });
 
 
-controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
-
-	
+controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,mention,message_received',function(bot, message) {
 
 	var	matches = message.text.match(/(google|googleta) (.*)/i);
 		
