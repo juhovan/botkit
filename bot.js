@@ -26,7 +26,7 @@ This bot demonstrates many of the core features of Botkit:
   Run your bot from the command line:
 
     set token=<MY TOKEN>
-	
+
 	node bot.js
 
 # USE THE BOT:
@@ -83,6 +83,43 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
+controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+    if (message.text === "prime") {
+        return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
+    }
+});
+
+controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+
+    var parameter = parseInt(message.match[1]);
+
+    if (MathHelper.isPrime(parameter)) {
+        var primes = new Array();
+        var number = parameter + 1;
+
+        while (primes.length < 10) {
+						if(number < 2)
+							break;
+
+            if (MathHelper.isPrime(number)) {
+                primes.push(number);
+            }
+
+            number--;
+						console.log(number);
+        }
+
+        var reply = "";
+        for (var i = 0; i < primes.length; i++) {
+            reply += primes[i] + " ";
+        }
+
+        return bot.reply(message, reply);
+    }
+    else {
+        return bot.reply(message, "your parameter: " + parameter + " is not Prime number");
+    }
+});
 
 controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function(bot, message) {
 
@@ -177,9 +214,9 @@ controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', functio
 
 controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var parameter = parseInt(message.match[1]);
-    
+
     var fibonacci = calculateFibonacciUpto(parameter);
-    
+
     if (fibonacci[fibonacci.length-1] !== parameter) {
         bot.reply(message, 'That is not a Fibonacci number!');
     }
@@ -190,11 +227,11 @@ controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention'
 
 function calculateFibonacciUpto(goal) {
     var fibonacci = [1, 1];
-    
+
     while (fibonacci[fibonacci.length-1] < goal) {
         fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
     }
-    
+
     return fibonacci;
 }
 
@@ -215,39 +252,3 @@ function formatUptime(uptime) {
     uptime = uptime + ' ' + unit;
     return uptime;
 }
-
-controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
-    if (message.text === "prime") {
-        return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
-    }
-});
-
-controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
-
-    var parameter = parseInt(message.match[1]);
-
-    if (MathHelper.isPrime(parameter)) {
-        var primes = new Array();
-        var number = parameter + 1;
-
-        while (primes.length < 10) {
-
-            if (MathHelper.isPrime(number)) {
-                primes.push(number);
-            }
-
-            number++;
-        }
-
-        var reply = "";
-        for (var i = 0; i < primes.length; i++) {
-            reply += primes[i] + " ";
-        }
-
-        return bot.reply(message, reply);
-    }
-    else {
-        return bot.reply(message, "your parameter: " + parameter + " is not Prime number");
-    }
-});
-
