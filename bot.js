@@ -64,7 +64,8 @@ This bot demonstrates many of the core features of Botkit:
     -> http://howdy.ai/botkit
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+var weather = require('weather-js');
+var TinyURL = require('tinyurl');
 
 if (!process.env.token) {
     console.log('Error: Specify token in environment');
@@ -74,6 +75,13 @@ if (!process.env.token) {
 var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
+var botmath = require('./botmath.js');
+var fibo = require('./fibonacci.js');
+var http = require('http');
+var request = require('request');
+
+
+
 
 var controller = Botkit.slackbot({
     debug: true,
@@ -134,6 +142,84 @@ controller.hears(['what is my name','who am i'],'direct_message,direct_mention,m
 });
 
 
+controller.hears(['google (.*)','googleta (.*)'],'direct_message,direct_mention,mention,message_received',function(bot, message) {
+
+	var	matches = message.text.match(/(google|googleta) (.*)/i);
+		
+	var sentence = matches[2];
+	
+	console.log(sentence);
+	
+    controller.storage.users.get(message.user,function(err, user) {
+		
+		if(err) console.log(err);
+		
+        var link = String(botmath.googlefunc(sentence));
+		
+		var randomfunc = botmath.randomanswer();
+		 
+		TinyURL.shorten(link, function(res) {
+				 bot.reply(message, randomfunc + ' ' + res);
+		});
+    });
+});
+
+controller.hears(['who made me'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+        if (user && user.name) {
+            bot.reply(message,user.name + ' made me');
+        } else {
+            bot.reply(message,'I don\'t know yet!');
+        }
+    });
+});
+
+controller.on('user_channel_join',function(bot, message) {
+		var poembase = [
+				"Roses are red, my cat eat dogs for breakfast",
+				"Gangters are like pets",
+				"Roses are red Violets are blue Rhyming is hard Like I am for you",
+				"Roses are okay Violets are fine You be the 6 And I'll be the 9",
+				"Roses are red Violets are violet Here is my number Why don't you dial it?",
+		];
+		var selecteditem = parseInt(poembase.length * Math.random(), 10);
+		var thispoem = poembase[selecteditem];
+		
+        bot.reply(message, 'My poem is here: ' + thispoem);
+});
+
+controller.hears(['how is the weather in (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+	    var matches = message.text.match(/how is the weather in (.*)/i);
+		var city = matches[1]; 
+
+    controller.storage.users.get(message.user,function(err, user) {
+        if (city) {
+		
+		weather.find({search: ''+city+'', degreeType: 'C'}, function(err, result) {
+		if(err) console.log(err);
+		
+		/*
+		console.log("LOCATION " + JSON.stringify(result[0].location.name, null, 2));
+		*/
+		
+		var cityname = JSON.stringify(result[0].location.name, null, 2);
+		var temperature = JSON.stringify(result[0].current.temperature, null, 2);
+		var weather = JSON.stringify(result[0].current.skytext, null, 2);
+		
+		bot.reply(message,'The weather in ' + cityname + ' ,' +' Temperature: ' + temperature + 'C ,' + " Weather: " + weather);
+		
+		});
+
+        } if(!city) {
+            bot.reply(message,'Please give city.');
+        }
+		
+    });
+});
+
+
 controller.hears(['shutdown'],'direct_message,direct_mention,mention',function(bot, message) {
 
     bot.startConversation(message,function(err, convo) {
@@ -168,35 +254,78 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
     bot.reply(message,':robot_face: I am a bot named <@' + bot.identity.name + '>. I have been running for ' + uptime + ' on ' + hostname + '.');
 
 });
+controller.hears(['prime'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    controller.storage.users.get(message.user,function(err, user) {
+        bot.reply(message,'2,  3,  5,  7,  11,  13,  17,  19,  23,  29');
+
+    });
+});
+
+controller.hears(['prime (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+	
+	var numbers = message.text.match(/prime (.*)/i);
+	var number = numbers[1];
+	
+	var test = number / number;
+	var sectest = number / 2;
+
+
+    controller.storage.users.get(message.user,function(err, user) {
+        
+		if(test == 1 && sectest % 1 != 0) {
+			bot.reply(message,number +' is prime number');
+		} else if (number == 2) {
+			bot.reply(message,number +' is prime number');
+		} else {
+			bot.reply(message,number +' is not prime number');
+			
+			var count = 0;
+			var primenumbers = [];
+			var jako
+			var jako2
+			
+			while(count < 10)
+			{
+				number--;
+				
+				jako = number / number;
+				jako2 = number / 2;
+				
+				if(jako == 1 && jako2 % 1 !== 0 || number == 2 || number == -2 || number == 0)
+				{
+		
+					primenumbers.push(number);
+					count++;
+					
+				}
+			
+			}
+			bot.reply(message,'next 10 prime numbers are: ' + primenumbers);			
+		}
+    });
+});
 
 controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
     if (message.text === 'fibonacci') {
-        bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+        bot.reply(message, 'First five fibonacci numbers: 1, 1, 2, 3, 5');
     }
 });
 
 controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var parameter = parseInt(message.match[1]);
-    
-    var fibonacci = calculateFibonacciUpto(parameter);
-    
+
+    var fibonacci = fibo.calculateFibonacciUpto(parameter);
+
     if (fibonacci[fibonacci.length-1] !== parameter) {
         bot.reply(message, 'That is not a Fibonacci number!');
     }
     else {
-        bot.reply(message, fibonacci.slice(fibonacci.length-10,fibonacci.length).join(', '));
+        var nextFibs = fibo.calculateNextFiveFibonacci(fibonacci);
+        bot.reply(message,"That is a Fibonacci number! Here are the next 5: " + nextFibs);
     }
 });
 
-function calculateFibonacciUpto(goal) {
-    var fibonacci = [1, 1];
-    
-    while (fibonacci[fibonacci.length-1] < goal) {
-        fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
-    }
-    
-    return fibonacci;
-}
 
 function formatUptime(uptime) {
     var unit = 'second';
@@ -214,8 +343,10 @@ function formatUptime(uptime) {
 
     uptime = uptime + ' ' + unit;
     return uptime;
-}
+};
 
+
+/*
 controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
     if (message.text === "prime") {
         return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
@@ -250,4 +381,83 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
         return bot.reply(message, "your parameter: " + parameter + " is not Prime number");
     }
 });
+*/
+
+controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+
+	var num1 = message.match[1];
+	var num2 = message.match[2];
+		
+	if (num1 != null && num2 != null) {
+		return bot.reply(message, num1 + ' + ' + num2 + ' = ' + botmath.sum(num1, num2));
+	}
+
+});
+
+controller.hears(['speedrun (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    var matches = message.text.match(/speedrun (.*)/i);
+    var name = matches[1];
+
+    const apiUrl = 'http://www.speedrun.com/api_records.php?series=';
+    var url = apiUrl.concat(name);
+
+        request(url, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var parsed = JSON.parse(body);
+                    var gameArray = [];
+
+                    for(var x in parsed){
+                        gameArray.push(parsed[x]);
+                    }
+
+                    bot.reply(message,'Here are some speedruns that I found!');
+
+                    for (var item in parsed) {
+                        bot.reply(message,'Game: ' + item);
+                        for (var subItem in parsed[item]) {
+                            var reply = JSON.stringify(parsed[item][subItem], null, 4);
+                            bot.reply(message,reply);
+                        }
+                    }
+                }
+                if(error) {
+                    console.log(error);
+        }
+    })
+});
+
+controller.hears(['xkcd new'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    const url = 'https://xkcd.com/info.0.json';
+
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var parsed = JSON.parse(body);
+            bot.reply(message,'Here is the latest XKCD comic: ' + parsed['img']);
+        }
+        if(error) {
+            console.log(error);
+        }
+    })
+});
+
+controller.hears(['xkcd random'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    const host = 'https://xkcd.com/';
+    const end = '/info.0.json';
+    var num = Math.floor(Math.random() * 1648);
+    var url = host + num + end;
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var parsed = JSON.parse(body);
+            console.log('PARSED: ' + parsed);
+            bot.reply(message,'Here is a random XKCD comic: ' + parsed['img']);
+        }
+        if(error) {
+            console.log(error);
+        }
+    })
+});
+
 
