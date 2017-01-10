@@ -26,7 +26,7 @@ This bot demonstrates many of the core features of Botkit:
   Run your bot from the command line:
 
     set token=<MY TOKEN>
-	
+
 	node bot.js
 
 # USE THE BOT:
@@ -74,6 +74,8 @@ if (!process.env.token) {
 var MathHelper = require('./botmath.js');
 var Botkit = require('./lib/Botkit.js');
 var os = require('os');
+var botmath = require('./botmath.js');
+var weather = require('weather-js');
 
 var controller = Botkit.slackbot({
     debug: true,
@@ -82,6 +84,36 @@ var controller = Botkit.slackbot({
 var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
+// Weather
+controller.hears(['weather (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+    var location = message.text.match(/weather (.*)/i);
+    var array= location[1].split(" ");
+    if(array[0]=='in'){
+        location=array[1];
+    }
+    else{
+        location=array[0];
+    }
+    weather.find({search: location+', FI', degreeType: 'C'}, function(err, result) {
+        try{
+            var array = result;
+            var temp = array[0].current.temperature;
+            var feeltemp = array[0].current.feelslike;
+            var place = array[0].current.observationpoint;
+            var skytext = array[0].current.skytext;
+            bot.reply(message, "Right now in "+place+" the sky is "+skytext+". It's "+temp+'C but it feels like '+feeltemp+'C to be honest.');
+        }
+        catch(err){
+            bot.reply(message,'I don\'t understand.');
+            console.log(err);
+        }
+    });
+});
 
 
 controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function(bot, message) {
@@ -169,6 +201,8 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
 
 });
 
+// Fibonacci
+
 controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
     if (message.text === 'fibonacci') {
         bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
@@ -177,9 +211,9 @@ controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', functio
 
 controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention', function(bot, message) {
     var parameter = parseInt(message.match[1]);
-    
+
     var fibonacci = calculateFibonacciUpto(parameter);
-    
+
     if (fibonacci[fibonacci.length-1] !== parameter) {
         bot.reply(message, 'That is not a Fibonacci number!');
     }
@@ -190,11 +224,11 @@ controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention'
 
 function calculateFibonacciUpto(goal) {
     var fibonacci = [1, 1];
-    
+
     while (fibonacci[fibonacci.length-1] < goal) {
         fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
     }
-    
+
     return fibonacci;
 }
 
@@ -216,6 +250,18 @@ function formatUptime(uptime) {
     return uptime;
 }
 
+controller.hears('what is (.*) \\+ (.*)',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
+
+	var num1 = message.match[1];
+	var num2 = message.match[2];
+
+	if (num1 != null && num2 != null) {
+		return bot.reply(message, num1 + ' + ' + num2 + ' = ' + botmath.sum(num1, num2));
+	}
+});
+
+// Prime
+
 controller.hears('prime',['direct_message', 'direct_mention', 'mention'],function(bot,message) {
     if (message.text === "prime") {
         return bot.reply(message, '2, 3, 5, 7, 11, 13, 17, 19, 23, 29');
@@ -231,12 +277,15 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
         var number = parameter + 1;
 
         while (primes.length < 10) {
+						if(number < 2)
+							break;
 
             if (MathHelper.isPrime(number)) {
                 primes.push(number);
             }
 
-            number++;
+            number--;
+						console.log(number);
         }
 
         var reply = "";
@@ -250,4 +299,3 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
         return bot.reply(message, "your parameter: " + parameter + " is not Prime number");
     }
 });
-
