@@ -83,6 +83,23 @@ var bot = controller.spawn({
     token: process.env.token
 }).startRTM();
 
+const weather = require('./weather/lib/weather.js');
+
+controller.hears(['How is the weather in (.*), (.*)'],'direct_message,direct_mention,mention',function(bot, message) {
+
+    var input1 = message.match[1];
+    var input2 = message.match[2];
+    console.log(input1);
+    console.log(input2);
+    weather.find({search: input1 + " " + input2, degreeType: 'C'}, function (err, result) {
+        console.log(JSON.stringify(result, null, 2));
+        if(result !== undefined){
+            bot.reply(message, JSON.stringify(result[0].current.temperature, null, 2));
+        }else{
+            bot.reply(message, "You dont make any sence");
+        }
+    });
+});
 
 controller.hears(['hello','hi'],'direct_message,direct_mention,mention',function(bot, message) {
 
@@ -171,7 +188,7 @@ controller.hears(['uptime','identify yourself','who are you','what is your name'
 
 controller.hears(['fibonacci'], 'direct_message,direct_mention,mention', function(bot, message) {
     if (message.text === 'fibonacci') {
-        bot.reply(message, '1, 1, 2, 3, 5, 8, 13, 21, 34, 55');
+        bot.reply(message, '1, 1, 2, 3, 5');
     }
 });
 
@@ -184,17 +201,28 @@ controller.hears(['fibonacci ([0-9]+)'], 'direct_message,direct_mention,mention'
         bot.reply(message, 'That is not a Fibonacci number!');
     }
     else {
-        bot.reply(message, fibonacci.slice(fibonacci.length-10,fibonacci.length).join(', '));
+        var a = fibonacci[fibonacci.length-1];
+        var b;
+        if(fibonacci.length>1){
+            b=fibonacci[fibonacci.length-2];
+        }else{
+            b=0;
+        }
+        var nextFive = [];
+        for(var i = 0; i<5; i++){
+            nextFive.push(a+b);
+            b = a;
+            a = nextFive[i];
+        }
+        bot.reply(message, nextFive.slice(0,nextFive.length).join(', '));
     }
 });
 
 function calculateFibonacciUpto(goal) {
     var fibonacci = [1, 1];
-    
     while (fibonacci[fibonacci.length-1] < goal) {
         fibonacci.push(fibonacci[fibonacci.length-2] + fibonacci[fibonacci.length-1]);
     }
-    
     return fibonacci;
 }
 
@@ -235,8 +263,12 @@ controller.hears('prime (.*)',['direct_message', 'direct_mention', 'mention'],fu
             if (MathHelper.isPrime(number)) {
                 primes.push(number);
             }
+            
+            if(number ==0) {
+            	break;
+            }
 
-            number++;
+            number--;
         }
 
         var reply = "";
